@@ -6,6 +6,35 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 device = "cuda"
 
+class Qwen2_ModelLoader_EveryTime_Zho:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "seed_force_load_model_every_time": ("INT",),
+                "model_name": (["Qwen/Qwen2-7B-Instruct", "Qwen/Qwen2-72B-Instruct", "Qwen/Qwen2.5-0.5B-Instruct", "Qwen/Qwen2.5-1.5B-Instruct", "Qwen/Qwen2.5-3B-Instruct", "Qwen/Qwen2.5-7B-Instruct", "Qwen/Qwen2.5-14B-Instruct", "Qwen/Qwen2.5-32B-Instruct", "Qwen/Qwen2.5-72B-Instruct"],),
+            }
+        }
+
+    RETURN_TYPES = ("QWEN2", "TK")
+    RETURN_NAMES = ("Qwen2", "tokenizer")
+    FUNCTION = "load_model"
+    CATEGORY = "⛱️Qwen2"
+  
+    def load_model(self, model_name,seed_force_load_model_every_time):
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name, 
+            device_map="cuda", 
+            torch_dtype="auto", 
+        )
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        return model, tokenizer
+
+
+
 class Qwen2_ModelLoader_Zho:
     def __init__(self):
         pass
@@ -152,12 +181,14 @@ class Qwen2_Chat_Zho:
 
 NODE_CLASS_MAPPINGS = {
     "Qwen2_ModelLoader_Zho": Qwen2_ModelLoader_Zho,
+    "Qwen2_ModelLoader_EveryTime_Zho": Qwen2_ModelLoader_EveryTime_Zho,
     "Qwen2_Zho": Qwen2_Zho,
     "Qwen2_Chat_Zho": Qwen2_Chat_Zho,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen2_ModelLoader_Zho": "⛱️Qwen2 ModelLoader",
+    "Qwen2_ModelLoader_EveryTime_Zho": "⛱️Qwen2_ModelLoader_EveryTime_Zho",
     "Qwen2_Zho": "⛱️Qwen2",
     "Qwen2_Chat_Zho": "⛱️Qwen2 Chat",
 }
