@@ -62,6 +62,34 @@ class Qwen2_ModelLoader_Zho:
         return model, tokenizer
 
 
+class Qwen2_CustomModelLoader_Zho:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "seed_force_load_model_every_time": ("INT",),
+                "custom_model": ("STRING", {"default": "", "multiline": False}),
+            }
+        }
+
+    RETURN_TYPES = ("QWEN2", "TK")
+    RETURN_NAMES = ("Qwen2", "tokenizer")
+    FUNCTION = "load_model"
+    CATEGORY = "⛱️Qwen2"
+  
+    def load_model(self, custom_model, seed_force_load_model_every_time):
+        model = AutoModelForCausalLM.from_pretrained(
+            custom_model, 
+            device_map="cuda", 
+            torch_dtype="auto", 
+        )
+        tokenizer = AutoTokenizer.from_pretrained(custom_model)
+        return model, tokenizer
+
+
 class Qwen2_Zho:
     def __init__(self):
         pass
@@ -184,6 +212,7 @@ NODE_CLASS_MAPPINGS = {
     "Qwen2_ModelLoader_EveryTime_Zho": Qwen2_ModelLoader_EveryTime_Zho,
     "Qwen2_Zho": Qwen2_Zho,
     "Qwen2_Chat_Zho": Qwen2_Chat_Zho,
+    "Qwen2_CustomModelLoader_Zho": Qwen2_CustomModelLoader_Zho,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
@@ -191,4 +220,5 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "Qwen2_ModelLoader_EveryTime_Zho": "⛱️Qwen2_ModelLoader_EveryTime_Zho",
     "Qwen2_Zho": "⛱️Qwen2",
     "Qwen2_Chat_Zho": "⛱️Qwen2 Chat",
+    "Qwen2_CustomModelLoader_Zho": "⛱️Qwen2 Custom ModelLoader",
 }
